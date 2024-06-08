@@ -13,13 +13,11 @@ import re
 import os
 import fileinput
 
-# aai.settings.api_key = "6ea41d6b1c344a54b4ef1a3fb43f8374"
 
-# transcriber = aai.Transcriber()
-# transcript = transcriber.transcribe("video.mp4")
 
 def load_model():
-    model = keras.models.load_model("." + url_for('static', filename='CNN_10e'))
+    model = keras.models.load_model("." + url_for('static', filename='multi_label_model.h5'))
+    print("model loaded")
     return model
 
 def preprocess(text):
@@ -29,7 +27,7 @@ def preprocess(text):
 def output(key, values):
     dictionary = dict(zip(key, values[0]))
     max_key = max(dictionary, key=dictionary.get)
-    if dictionary[max_key] >= 0.4:
+    if dictionary[max_key] >= 0.3:
         return max_key
     else:
         return "Neutral"
@@ -58,6 +56,16 @@ def predict_category(text):
     return output(CLASSES, predictions) 
     
 
+def predict_category2(text):
+    preprocessed_text = preprocess(text)
+    max_sequence_length = 100
+
+    tokenizer = Tokenizer()
+    new_sequences = tokenizer.texts_to_sequences([preprocessed_text])
+    new_padded_sequences = pad_sequences(new_sequences, maxlen=max_sequence_length)
+
+    return new_padded_sequences
+
 
 
 def allowed_file(filename):
@@ -81,12 +89,12 @@ def process_txt(file_path):
 
 
 def process_media(file_path):
-    aai.settings.api_key = "6ea41d6b1c344a54b4ef1a3fb43f8374"
+    print("Assembly Ai API key did not set")
+    aai.settings.api_key = ""
     transcriber = aai.Transcriber()
     transcript = transcriber.transcribe(file_path)
 
     return transcript.text
-
 
 
 
