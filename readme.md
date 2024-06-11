@@ -2,6 +2,9 @@
 
 A web application built with Flask for flagging and managing media files. This project allows users to upload media files, analyze them using CNN model along with Pretrained Glove Word Embeddings, and manage flagged content.
 
+## ML
+- [Model](https://github.com/omdusane/CNN-Glove-Multilabel-ML)
+
 
 ## Features
 
